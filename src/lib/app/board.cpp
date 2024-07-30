@@ -31,16 +31,16 @@ Board::Board(){
 
 }
         
-Piece Board::get_piece(int row, int col){
-    return board_[col][row];
+Piece Board::get_piece(Location loc){
+    return board_[loc.col()][loc.row()];
 }
 
-ReturnCode_e Board::replace_piece(int row, int col, PieceName_e name, PieceColor_e color){
-    if(row < 0 || row >= BOARD_ROW_COUNT || col < 0 || col >= BOARD_COL_COUNT){
+ReturnCode_e Board::set_piece(Location loc, Piece piece){
+    if(loc.row() < 0 || loc.row() >= BOARD_ROW_COUNT || loc.col() < 0 || loc.col() >= BOARD_COL_COUNT){
         return RC_ERROR;
     }
 
-    board_[col][row] = Piece(name, color);
+    board_[loc.col()][loc.row()] = piece;
 
     return RC_SUCCESS;
 }
@@ -48,7 +48,7 @@ ReturnCode_e Board::replace_piece(int row, int col, PieceName_e name, PieceColor
 void print_board(Board board){
     for(int row = 0; row < BOARD_ROW_COUNT; row++){
         for(int col = 0; col < BOARD_COL_COUNT; col++){
-            std::cout << board.get_piece(row, col).symbol() << " ";
+            std::cout << board.get_piece(Location(row, col)).symbol() << " ";
         }
         std::cout << std::endl;
     }

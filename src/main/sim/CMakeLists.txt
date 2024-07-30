@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     main.cpp
     ../../lib/app/piece.cpp
     ../../lib/app/board.cpp
+    ../../lib/app/actor.cpp
 )
 
 

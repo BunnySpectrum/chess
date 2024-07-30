@@ -1,3 +1,4 @@
+#pragma once
 
 #include "app/piece.h"
 #include "utils/codes.h"
@@ -8,8 +9,8 @@
 class Board{
     public:
         Board();
-        Piece get_piece(int row, int col);
-        ReturnCode_e replace_piece(int row, int col, PieceName_e name, PieceColor_e color);
+        Piece get_piece(Location loc);
+        ReturnCode_e set_piece(Location loc, Piece piece);
 
     private:
         Piece board_[BOARD_COL_COUNT][BOARD_ROW_COUNT];
