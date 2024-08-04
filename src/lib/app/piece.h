@@ -3,17 +3,32 @@
 #include <string>
 #include <iostream>
 
+#include "utils/codes.h"
+
 class Location{
     public:
+        Location();
         Location(int row, int col);
-        int row();
-        int col();
+        int row() const;
+        int col() const;
+        bool is_invalid();
+        bool operator==(const Location &otherLoc) const;
+        friend std::ostream &operator<<(std::ostream &os, Location const &loc);  
+
 
     private:
         int row_;
         int col_;
 };
 
+template<>
+struct std::hash<Location>
+{
+    size_t operator()(const Location &loc) const{
+        size_t hash = (loc.row() << 8) && loc.col();
+        return hash;
+    }
+};
 
 
 typedef enum PieceName{
@@ -38,20 +53,22 @@ typedef enum PieceColor{
 class Piece{
     public:
         Piece();
-        Piece(PieceName_e id, PieceColor_e color);
-        PieceName_e id();
-        PieceColor_e color();
-        // Location location();
-        std::string symbol();
-        // std::string repr();
+        Piece(PieceName_e id, PieceColor_e color, Location loc);
+        PieceName_e id() const;
+        PieceColor_e color() const;
+        Location location() const;
+        std::string symbol() const;
+        ReturnCode_e move(Location newLoc);
+        friend std::ostream &operator<<(std::ostream &os, Piece const &piece);  
 
     private:
         PieceName_e id_;
         PieceColor_e color_;
-        // Location loc_;
+        Location loc_;
 };
 
 std::string pieceNameToString(PieceName_e piece);
 std::string pieceNameToSymbol(PieceName_e piece);
 std::string pieceColorToSymbol(PieceColor_e color);
+bool isNewLocationValid(Piece piece, Location loc);
 void print_piece(Piece piece);

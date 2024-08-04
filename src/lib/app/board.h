@@ -3,14 +3,14 @@
 #include "app/piece.h"
 #include "utils/codes.h"
 
-#define BOARD_ROW_COUNT 8
-#define BOARD_COL_COUNT 8
 
 class Board{
     public:
         Board();
         Piece get_piece(Location loc);
         ReturnCode_e set_piece(Location loc, Piece piece);
+
+        ReturnCode_e clear_piece(Location loc);
 
     private:
         Piece board_[BOARD_COL_COUNT][BOARD_ROW_COUNT];

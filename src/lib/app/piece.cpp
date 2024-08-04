@@ -1,18 +1,43 @@
 
 #include "piece.h"
 
+Location::Location():
+row_(-1),
+col_(-1){
+    ;
+}
+
 Location::Location(int row, int col):
 row_(row),
 col_(col){
     ;
 }
 
-int Location::row(){
+int Location::row() const{
     return row_;
 }
 
-int Location::col(){
+int Location::col() const{
     return col_;
+}
+        
+bool Location::is_invalid(){
+    if( (this->row_ < 0) || (this->row_ >= BOARD_ROW_COUNT) || (this->col_ < 0) || (this->col_ >= BOARD_ROW_COUNT)){
+        return true;
+    }
+    return false;
+}
+
+std::ostream &operator<<(std::ostream &os, Location const &loc){
+    return os << loc.row() << ":" << loc.col();
+}
+
+bool Location::operator==(const Location &otherLoc) const{
+    if( (this->row() == otherLoc.row()) && (this->col() == otherLoc.col())){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 
@@ -87,15 +112,16 @@ std::string pieceColorToSymbol(PieceColor_e color){
     }
 }
 
-
 Piece::Piece(){
     id_ = PIECE_NOTHING;
     color_ = COLOR_WHITE;
+    loc_ = Location(-1, -1);
 };
 
-Piece::Piece(PieceName_e id, PieceColor_e color): 
+Piece::Piece(PieceName_e id, PieceColor_e color, Location loc): 
 id_(id),
-color_(color){
+color_(color),
+loc_(loc){
     ;
 }
 
@@ -105,15 +131,15 @@ color_(color){
 //     ;
 // }
 
-PieceName_e Piece::id(){
+PieceName_e Piece::id() const{
     return id_;
 }
 
-PieceColor_e Piece::color(){
+PieceColor_e Piece::color() const{
     return color_;
 }
 
-std::string Piece::symbol(){
+std::string Piece::symbol() const{
     if(this->id() == PIECE_NOTHING){
         return ' ' + pieceNameToSymbol(this->id());
     }else{
@@ -121,9 +147,36 @@ std::string Piece::symbol(){
     }
 }
 
-// Location Piece::location(){
-//     return loc_;
-// }
+Location Piece::location() const{
+    return loc_;
+}
+
+ReturnCode_e Piece::move(Location newLoc){
+
+    // determine id for new destination piece
+    auto newID = PIECE_NOTHING;
+    switch(this->id()){
+        case PIECE_PAWN_FIRST:
+            newID = PIECE_PAWN;
+            break;
+        case PIECE_KING_FIRST:
+            newID = PIECE_KING;
+            break;
+        case PIECE_ROOK_FIRST:
+            newID = PIECE_ROOK;
+            break;
+        default:
+            newID = this->id();
+            break;
+    }
+    return RC_ERROR;
+}
+
+
+
+std::ostream &operator<<(std::ostream &os, Piece const &piece){
+    return os << piece.symbol() << " at " << piece.location();
+}
 
 // std::ostream &operator<<(std::ostream os, Piece const &piece){
 //     return os << " at ";// << piece.loc;

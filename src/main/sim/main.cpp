@@ -19,6 +19,8 @@ int main(int argc, char* argv[]){
     move_piece(&board, Location(1, 7), Location(5, 7));
 
     print_board(board);
+    Piece piece = board.get_piece(Location(5, 7));
+    std::cout << piece << std::endl;
 
     return 0;
 }
