@@ -178,6 +178,16 @@ std::ostream &operator<<(std::ostream &os, Piece const &piece){
     return os << piece.symbol() << " at " << piece.location();
 }
 
+bool Piece::operator==(const Piece &otherPiece) const{
+    if( (this->location() == otherPiece.location()) && 
+        (this->id() == otherPiece.id()) &&
+        (this->color() == otherPiece.color()) ){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 // std::ostream &operator<<(std::ostream os, Piece const &piece){
 //     return os << " at ";// << piece.loc;
 // }

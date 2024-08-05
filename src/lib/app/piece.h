@@ -59,6 +59,7 @@ class Piece{
         Location location() const;
         std::string symbol() const;
         ReturnCode_e move(Location newLoc);
+        bool operator==(const Piece &otherPiece) const;
         friend std::ostream &operator<<(std::ostream &os, Piece const &piece);  
 
     private:
@@ -72,3 +73,13 @@ std::string pieceNameToSymbol(PieceName_e piece);
 std::string pieceColorToSymbol(PieceColor_e color);
 bool isNewLocationValid(Piece piece, Location loc);
 void print_piece(Piece piece);
+
+
+template<>
+struct std::hash<Piece>
+{
+    size_t operator()(const Piece &piece) const{
+        size_t hash = (piece.color() << 8) && piece.id();
+        return hash;
+    }
+};

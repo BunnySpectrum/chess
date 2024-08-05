@@ -1,4 +1,6 @@
 #include <iostream>
+#include <unordered_set>
+
 #include "app/piece.h"
 #include "app/board.h"
 #include "app/actor.h"
@@ -19,8 +21,16 @@ int main(int argc, char* argv[]){
     move_piece(&board, Location(1, 7), Location(5, 7));
 
     print_board(board);
-    Piece piece = board.get_piece(Location(5, 7));
-    std::cout << piece << std::endl;
+    
+    std::unordered_set<Piece> pieces;
+    pieces.insert(Piece(PIECE_PAWN, COLOR_WHITE, Location(1,1)));
+    pieces.insert(Piece(PIECE_KING, COLOR_BLACK, Location(2,2)));
+
+    for(const Piece& piece : pieces){
+        std::cout << piece << std::endl;
+    }
+
+    
 
     return 0;
 }
