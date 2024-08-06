@@ -36,7 +36,10 @@ Board::Board(){
 
 }
         
-Piece Board::get_piece(Location loc){
+Piece Board::get_piece(Location loc) const{
+    if(loc.is_invalid()){
+        return Piece(PIECE_NOTHING, COLOR_WHITE, loc);
+    }
     return board_[loc.col()][loc.row()];
 }
 

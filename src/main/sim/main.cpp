@@ -13,12 +13,13 @@ int main(int argc, char* argv[]){
     print_board(board);
     std::cout << std::endl;
 
-    move_piece(&board, Location(6, 0), Location(4, 0));
-    move_piece(&board, Location(7, 0), Location(5, 0));
-    move_piece(&board, Location(6, 4), Location(4, 4));
+    // move_piece(&board, Location(6, 0), Location(4, 0));
+    // move_piece(&board, Location(7, 0), Location(5, 0));
+    // move_piece(&board, Location(6, 4), Location(4, 4));
     
-    move_piece(&board, Location(7, 4), Location(1, 7));
-    move_piece(&board, Location(1, 7), Location(5, 7));
+    // move_piece(&board, Location(7, 4), Location(1, 7));
+
+    // move_piece(&board, Location(7, 0), Location(2, 0));
 
     print_board(board);
     
@@ -30,6 +31,18 @@ int main(int argc, char* argv[]){
         std::cout << piece << std::endl;
     }
 
+    std::cout << "Moves for pawn" << std::endl;
+    std::vector<Location> moves;
+    moves = valid_moves_for_piece(&board, Location(1, 1));
+    for(const Location& loc : moves){
+        std::cout << loc << std::endl;
+    }
+
+    std::cout << "Moves for rook" << std::endl;
+    moves = valid_moves_for_piece(&board, Location(0, 0));
+    for(const Location& loc : moves){
+        std::cout << loc << std::endl;
+    }
     
 
     return 0;

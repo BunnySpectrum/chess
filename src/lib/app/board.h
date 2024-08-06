@@ -7,7 +7,7 @@
 class Board{
     public:
         Board();
-        Piece get_piece(Location loc);
+        Piece get_piece(Location loc) const;
         ReturnCode_e set_piece(Location loc, Piece piece);
 
         ReturnCode_e clear_piece(Location loc);
