@@ -11,7 +11,7 @@ class Location{
         Location(int row, int col);
         int row() const;
         int col() const;
-        bool is_invalid();
+        bool is_invalid() const;
         bool operator==(const Location &otherLoc) const;
         friend std::ostream &operator<<(std::ostream &os, Location const &loc);  
 

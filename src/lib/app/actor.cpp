@@ -158,10 +158,13 @@ std::vector<Location> valid_moves_for_rook(const Board* pBoard, Location startLo
         }
 
         testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
-            result.push_back(testLoc);
+        if( (testPiece.id() != PIECE_NOTHING)){
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
             break;
         }
+        result.push_back(testLoc);
     }
 
 
@@ -173,10 +176,13 @@ std::vector<Location> valid_moves_for_rook(const Board* pBoard, Location startLo
         }
 
         testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
-            result.push_back(testLoc);
+        if( (testPiece.id() != PIECE_NOTHING)){//
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
             break;
         }
+        result.push_back(testLoc);
     }
 
     // search ahead in columns, stay in current row
@@ -187,10 +193,13 @@ std::vector<Location> valid_moves_for_rook(const Board* pBoard, Location startLo
         }
 
         testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
-            result.push_back(testLoc);
+        if( (testPiece.id() != PIECE_NOTHING)){//
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
             break;
         }
+        result.push_back(testLoc);
     }
 
     // search ahead in columns, stay in current row
@@ -201,10 +210,13 @@ std::vector<Location> valid_moves_for_rook(const Board* pBoard, Location startLo
         }
 
         testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
-            result.push_back(testLoc);
+        if( (testPiece.id() != PIECE_NOTHING)){//
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
             break;
         }
+        result.push_back(testLoc);
     }
 
 
@@ -212,18 +224,32 @@ std::vector<Location> valid_moves_for_rook(const Board* pBoard, Location startLo
 }
 std::vector<Location> valid_moves_for_knight(const Board* pBoard, Location startLoc){
     auto result = std::vector<Location>();
-    Location testLoc;
     Piece testPiece, startPiece;
     int deltaRow, deltaCol;
 
     startPiece = pBoard->get_piece(startLoc);
     std::cout << "Testing piece: " << startPiece << std::endl;
 
-    testLoc = Location(startLoc.row() + 1, startLoc.col() + 1);
-    if(!testLoc.is_invalid()){
-        testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) || (testPiece.color() != startPiece.color())){
-            result.push_back(testLoc);
+    std::vector<Location> locationsToTest{
+        {startLoc.row() + 2, startLoc.col() + 1}, 
+        {startLoc.row() + 2, startLoc.col() - 1}, 
+        {startLoc.row() - 2, startLoc.col() + 1}, 
+        {startLoc.row() - 2, startLoc.col() - 1}, 
+        {startLoc.row() + 1, startLoc.col() + 2}, 
+        {startLoc.row() - 1, startLoc.col() + 2}, 
+        {startLoc.row() + 1, startLoc.col() - 2}, 
+        {startLoc.row() - 1, startLoc.col() - 2}};
+
+    for(const Location& testLoc : locationsToTest ){
+        if(!testLoc.is_invalid()){
+            testPiece = pBoard->get_piece(testLoc);
+            if( (testPiece.id() != PIECE_NOTHING)){
+                if(testPiece.color() != startPiece.color()){
+                    result.push_back(testLoc);
+                }
+            }else{
+                result.push_back(testLoc);
+            }
         }
     }
 

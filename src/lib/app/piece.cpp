@@ -21,7 +21,7 @@ int Location::col() const{
     return col_;
 }
         
-bool Location::is_invalid(){
+bool Location::is_invalid() const{
     if( (this->row_ < 0) || (this->row_ >= BOARD_ROW_COUNT) || (this->col_ < 0) || (this->col_ >= BOARD_ROW_COUNT)){
         return true;
     }

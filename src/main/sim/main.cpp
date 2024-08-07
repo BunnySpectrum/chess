@@ -19,7 +19,6 @@ int main(int argc, char* argv[]){
     
     // move_piece(&board, Location(7, 4), Location(1, 7));
 
-    // move_piece(&board, Location(7, 0), Location(2, 0));
 
     print_board(board);
     
@@ -38,12 +37,20 @@ int main(int argc, char* argv[]){
         std::cout << loc << std::endl;
     }
 
+    move_piece(&board, Location(1, 0), Location(3, 0));
+    move_piece(&board, Location(0, 1), Location(4, 0));
+    print_board(board);
     std::cout << "Moves for rook" << std::endl;
     moves = valid_moves_for_piece(&board, Location(0, 0));
     for(const Location& loc : moves){
         std::cout << loc << std::endl;
     }
     
+    std::cout << "Moves for knight" << std::endl;
+    moves = valid_moves_for_piece(&board, Location(0, 6));
+    for(const Location& loc : moves){
+        std::cout << loc << std::endl;
+    }
 
     return 0;
 }
