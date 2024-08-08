@@ -52,5 +52,14 @@ int main(int argc, char* argv[]){
         std::cout << loc << std::endl;
     }
 
+    std::cout << "Moves for bishop" << std::endl;
+    // move_piece(&board, Location(6, 3), Location(5, 3));
+    move_piece(&board, Location(7, 2), Location(4, 2));
+    print_board(board);
+    moves = valid_moves_for_piece(&board, Location(4, 2));
+    for(const Location& loc : moves){
+        std::cout << loc << std::endl;
+    }
+    std::cout << "End of line." << std::endl;
     return 0;
 }

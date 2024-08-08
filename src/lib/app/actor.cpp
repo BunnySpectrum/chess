@@ -265,13 +265,84 @@ std::vector<Location> valid_moves_for_bishop(const Board* pBoard, Location start
     startPiece = pBoard->get_piece(startLoc);
     std::cout << "Testing piece: " << startPiece << std::endl;
 
-    testLoc = Location(startLoc.row() + 1, startLoc.col() + 1);
-    if(!testLoc.is_invalid()){
+    // search up in rows and col
+    deltaRow = 1;
+    deltaCol = 1;
+    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    while(!testLoc.is_invalid()){
         testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) || (testPiece.color() != startPiece.color())){
+        if( (testPiece.id() == PIECE_NOTHING)){
             result.push_back(testLoc);
+        }else{
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
+            break;
         }
+        deltaRow++;
+        deltaCol++;
+        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
     }
+
+
+    // search up in rows and down col
+    deltaRow = 1;
+    deltaCol = -1;
+    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    while(!testLoc.is_invalid()){
+        testPiece = pBoard->get_piece(testLoc);
+        if( (testPiece.id() == PIECE_NOTHING)){
+            result.push_back(testLoc);
+        }else{
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
+            break;
+        }
+        deltaRow++;
+        deltaCol--;
+        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    }
+
+    // search down in rows and up col
+    deltaRow = -1;
+    deltaCol = +1;
+    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    while(!testLoc.is_invalid()){
+        testPiece = pBoard->get_piece(testLoc);
+        if( (testPiece.id() == PIECE_NOTHING)){
+            result.push_back(testLoc);
+        }else{
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
+            break;
+        }
+        deltaRow--;
+        deltaCol++;
+        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    }
+
+
+    // search down in rows and col
+    deltaRow = -1;
+    deltaCol = -1;
+    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    while(!testLoc.is_invalid()){
+        testPiece = pBoard->get_piece(testLoc);
+        if( (testPiece.id() == PIECE_NOTHING)){
+            result.push_back(testLoc);
+        }else{
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
+            break;
+        }
+        deltaRow--;
+        deltaCol--;
+        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    }
+
 
     return result;
 }
