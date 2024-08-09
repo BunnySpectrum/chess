@@ -256,93 +256,87 @@ std::vector<Location> valid_moves_for_knight(const Board* pBoard, Location start
     return result;
 }
 
+
+
+static std::vector<Location> find_moves_line(const Board* pBoard, Location startLoc, SearchDirection_e dir){
+    auto result = std::vector<Location>();
+    Location testLoc;
+    Piece testPiece, startPiece;
+    int deltaRow, deltaCol, rowInc, colInc;
+
+    switch(dir){
+        case SEARCH_UP:
+            rowInc = -1;
+            colInc = 0;
+            break;
+        case SEARCH_UPRIGHT:
+            rowInc = -1;
+            colInc = 1;
+            break;
+        case SEARCH_RIGHT:
+            rowInc = 0;
+            colInc = 1;
+            break;
+        case SEARCH_DOWNRIGHT:
+            rowInc = 1;
+            colInc = 1;
+            break;
+        case SEARCH_DOWN:
+            rowInc = 1;
+            colInc = 0;
+            break;
+        case SEARCH_DOWNLEFT:
+            rowInc = 1;
+            colInc = -1;
+            break;
+        case SEARCH_LEFT:
+            rowInc = 0;
+            colInc = -1;
+            break;
+        case SEARCH_UPLEFT:
+            rowInc = -1;
+            colInc = -1;
+            break;
+        default:
+            std::cout << "Unexpected direction: " << dir << std::endl;
+            return result;
+    }
+
+    deltaRow = rowInc;
+    deltaCol = colInc;
+    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    while(!testLoc.is_invalid()){
+        testPiece = pBoard->get_piece(testLoc);
+        if( (testPiece.id() == PIECE_NOTHING)){
+            result.push_back(testLoc);
+        }else{
+            if(testPiece.color() != startPiece.color()){
+                result.push_back(testLoc);
+            }
+            break;
+        }
+        deltaRow += rowInc;
+        deltaCol += colInc;
+        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
+    }
+    return result;
+}
+
 std::vector<Location> valid_moves_for_bishop(const Board* pBoard, Location startLoc){
     auto result = std::vector<Location>();
     Location testLoc;
     Piece testPiece, startPiece;
     int deltaRow, deltaCol;
+    std::array<SearchDirection_e, 4> directions = {SEARCH_UPRIGHT, SEARCH_DOWNRIGHT, SEARCH_DOWNLEFT, SEARCH_UPLEFT};
 
     startPiece = pBoard->get_piece(startLoc);
-    std::cout << "Testing piece: " << startPiece << std::endl;
+    std::cout << "Testing piece (again): " << startPiece << std::endl;
 
-    // search up in rows and col
-    deltaRow = 1;
-    deltaCol = 1;
-    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
-    while(!testLoc.is_invalid()){
-        testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() == PIECE_NOTHING)){
-            result.push_back(testLoc);
-        }else{
-            if(testPiece.color() != startPiece.color()){
-                result.push_back(testLoc);
-            }
-            break;
+    for(const SearchDirection_e dir : directions){
+        for(const Location& loc : find_moves_line(pBoard, startLoc, dir)){
+            result.push_back(loc);
         }
-        deltaRow++;
-        deltaCol++;
-        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
     }
-
-
-    // search up in rows and down col
-    deltaRow = 1;
-    deltaCol = -1;
-    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
-    while(!testLoc.is_invalid()){
-        testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() == PIECE_NOTHING)){
-            result.push_back(testLoc);
-        }else{
-            if(testPiece.color() != startPiece.color()){
-                result.push_back(testLoc);
-            }
-            break;
-        }
-        deltaRow++;
-        deltaCol--;
-        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
-    }
-
-    // search down in rows and up col
-    deltaRow = -1;
-    deltaCol = +1;
-    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
-    while(!testLoc.is_invalid()){
-        testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() == PIECE_NOTHING)){
-            result.push_back(testLoc);
-        }else{
-            if(testPiece.color() != startPiece.color()){
-                result.push_back(testLoc);
-            }
-            break;
-        }
-        deltaRow--;
-        deltaCol++;
-        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
-    }
-
-
-    // search down in rows and col
-    deltaRow = -1;
-    deltaCol = -1;
-    testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
-    while(!testLoc.is_invalid()){
-        testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() == PIECE_NOTHING)){
-            result.push_back(testLoc);
-        }else{
-            if(testPiece.color() != startPiece.color()){
-                result.push_back(testLoc);
-            }
-            break;
-        }
-        deltaRow--;
-        deltaCol--;
-        testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
-    }
-
 
     return result;
 }
