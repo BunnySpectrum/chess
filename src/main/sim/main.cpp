@@ -5,6 +5,7 @@
 #include "app/board.h"
 #include "app/actor.h"
 
+
 int main(int argc, char* argv[]){
     // auto piece = Piece(PIECE_PAWN, Location(1,2));
     // print_piece(piece);
