@@ -7,6 +7,7 @@
 
 #include "unity.h"
 #include "test_location.h"
+#include "test_piece.h"
 
 extern "C" void setUp(void){
     ;
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]){
 
     std::cout << "Running" << std::endl;
     test_location();
+    test_piece();
 
     return UNITY_END();
 }

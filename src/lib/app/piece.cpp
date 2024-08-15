@@ -169,7 +169,8 @@ ReturnCode_e Piece::move(Location newLoc){
             newID = this->id();
             break;
     }
-    return RC_ERROR;
+    this->id_ = newID;
+    return RC_SUCCESS;
 }
 
 
