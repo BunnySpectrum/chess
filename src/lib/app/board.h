@@ -18,3 +18,4 @@ class Board{
 
 
 void print_board(Board board);
+void init_standard_board(Board* pBoard);
