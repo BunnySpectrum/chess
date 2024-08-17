@@ -167,25 +167,29 @@ std::vector<Location> valid_moves_for_pawn(const Board* pBoard, Location startLo
     Piece testPiece, startPiece;
 
     startPiece = pBoard->get_piece(startLoc);
+    int direction = startPiece.color() == COLOR_WHITE ? -1 : 1;
     std::cout << "Testing piece: " << startPiece << std::endl;
 
-    testLoc = Location(startLoc.row() + 1, startLoc.col() + 1);
+    // right-diagonal
+    testLoc = Location(startLoc.row() + direction, startLoc.col() + 1);
     if(!testLoc.is_invalid()){
         testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) || (testPiece.color() != startPiece.color())){
+        if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
             result.push_back(testLoc);
         }
     }
 
-    testLoc = Location(startLoc.row() + 1, startLoc.col() - 1);
+    // left-diagonal
+    testLoc = Location(startLoc.row() + direction, startLoc.col() - 1);
     if(!testLoc.is_invalid()){
         testPiece = pBoard->get_piece(testLoc);
-        if( (testPiece.id() != PIECE_NOTHING) || (testPiece.color() != startPiece.color())){
+        if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
             result.push_back(testLoc);
         }
     }
 
-    testLoc = Location(startLoc.row() + 1, startLoc.col());
+    // step forward
+    testLoc = Location(startLoc.row() + direction, startLoc.col());
     if(!testLoc.is_invalid()){
         testPiece = pBoard->get_piece(testLoc);
         if( (testPiece.id() == PIECE_NOTHING) ){
@@ -193,8 +197,9 @@ std::vector<Location> valid_moves_for_pawn(const Board* pBoard, Location startLo
         }
     }
 
+    // two steps if first
     if(startPiece.id() == PIECE_PAWN_FIRST){
-        testLoc = Location(startLoc.row() + 2, startLoc.col());
+        testLoc = Location(startLoc.row() + 2*direction, startLoc.col());
         if(!testLoc.is_invalid()){
             testPiece = pBoard->get_piece(testLoc);
             if( (testPiece.id() == PIECE_NOTHING) ){
