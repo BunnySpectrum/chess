@@ -6,23 +6,80 @@
 #include "app/actor.h"
 
 
+void receive_input(std::string *input){
+    std::getline(std::cin, *input);
+}
+
+enum class InputState{
+    Start,
+    First,
+    Delim,
+    Second,
+    End
+};
+
+
+void process_input(const std::string &input){
+    std::cout << "Got: " << input << std::endl;
+
+    std::string tokenL, tokenR;
+
+    auto state = InputState::Start;
+    for(const char val : input){
+        switch(state){
+            case InputState::Start:
+                if(val != ' '){
+                    std::cout << "(" << val << ") Start -> First" << std::endl;
+                    tokenL += val;
+                    state = InputState::First;
+                }
+                break;
+            case InputState::First:
+                if(val == ' '){
+                    std::cout << "(" << val << ") -> Delim" << std::endl;
+                    state = InputState::Delim;
+                }else{
+                    tokenL += val;
+                }
+                break;
+            case InputState::Delim:
+                if(val != ' '){
+                    std::cout << "(" << val << ") -> Second" << std::endl;
+                    tokenR += val;
+                    state = InputState::Second;
+                }
+                break;
+            case InputState::Second:
+                if(val == ' '){
+                    std::cout << "(" << val << ") -> End" << std::endl;
+                    state = InputState::End;
+                }else{
+                    tokenR += val;
+                }
+                break;
+            case InputState::End:
+                break;
+        }
+    }
+    std::cout << "First: " << tokenL << std::endl;
+    std::cout << "Second: " << tokenR << std::endl;
+}
+
+
 int main(int argc, char* argv[]){
-    // auto piece = Piece(PIECE_PAWN, Location(1,2));
-    // print_piece(piece);
 
     auto board = Board();
     print_board(board);
     std::cout << std::endl;
 
-    // move_piece(&board, Location(6, 0), Location(4, 0));
-    // move_piece(&board, Location(7, 0), Location(5, 0));
-    // move_piece(&board, Location(6, 4), Location(4, 4));
-    
-    // move_piece(&board, Location(7, 4), Location(1, 7));
+
+    std::string stroke;
+    receive_input(&stroke);
+    process_input(stroke);
+    return 0;
 
 
-    print_board(board);
-    
+
     std::unordered_set<Piece> pieces;
     pieces.insert(Piece(PIECE_PAWN, COLOR_WHITE, Location(1,1)));
     pieces.insert(Piece(PIECE_KING, COLOR_BLACK, Location(2,2)));
@@ -62,5 +119,7 @@ int main(int argc, char* argv[]){
         std::cout << loc << std::endl;
     }
     std::cout << "End of line." << std::endl;
-    return 0;
+
+
+
 }

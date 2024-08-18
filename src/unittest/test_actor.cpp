@@ -33,12 +33,12 @@ void test_actor_pawn(void)
 
   // auto result = std::vector<Location>();
 
-  auto result = valid_moves_for_piece(&board, loc);
-  for(const Location& loc : result){
+  auto moves = valid_moves_for_piece(&board, loc);
+  for(const Location& loc : moves){
     std::cout << loc << std::endl;
   }
 
-  auto pass = check_moves(&expected, &result);
+  auto pass = check_moves(&expected, &moves);
 
   TEST_ASSERT(pass);
 
