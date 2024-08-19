@@ -41,53 +41,57 @@ ReturnCode_e move_piece(Board* board, Location startLoc, Location endLoc){
     return RC_SUCCESS;
 }
 
-bool is_valid_move(Board board, Location startLoc, Location endLoc){
-    auto startPiece = board.get_piece(startLoc);
-    auto endPiece = board.get_piece(endLoc);
+// bool is_valid_move(Board board, Location startLoc, Location endLoc){
+//     auto startPiece = board.get_piece(startLoc);
+//     auto endPiece = board.get_piece(endLoc);
 
-    if(startLoc.is_invalid() || endLoc.is_invalid()){
-        return false;
+//     if(startLoc.is_invalid() || endLoc.is_invalid()){
+//         return false;
+//     }
+
+//     // Rule 0: can't capture your own piece
+//     if((endPiece.id() != PIECE_NOTHING) && (startPiece.color() == endPiece.color()) ){
+//         std::cout << "Can't capture own piece" << std::endl;
+//         return false;
+//     }
+
+//     int deltaRow = abs(startLoc.row() - endLoc.row());
+//     int deltaCol = abs(startLoc.col() - endLoc.col());
+//     bool isDiagonal = deltaRow == deltaCol;
+
+//     return false;
+// }
+
+std::vector<Location> valid_moves_for_piece(const Board& board, Location loc){
+    if(loc.is_invalid()){
+        return {};
     }
 
-    // Rule 0: can't capture your own piece
-    if((endPiece.id() != PIECE_NOTHING) && (startPiece.color() == endPiece.color()) ){
-        std::cout << "Can't capture own piece" << std::endl;
-        return false;
-    }
-
-    int deltaRow = abs(startLoc.row() - endLoc.row());
-    int deltaCol = abs(startLoc.col() - endLoc.col());
-    bool isDiagonal = deltaRow == deltaCol;
-
-    return false;
-}
-
-std::vector<Location> valid_moves_for_piece(const Board* pBoard, Location loc){
-    Piece piece = pBoard->get_piece(loc);
+    Piece piece = board.get_piece(loc);
     switch(piece.id()){
         case PIECE_NOTHING:
             return {};
 
         case PIECE_PAWN:
         case PIECE_PAWN_FIRST:
-            return valid_moves_for_pawn(pBoard, loc);
+            return valid_moves_for_pawn(&board, loc);
 
         case PIECE_ROOK:
         case PIECE_ROOK_FIRST:
-            return valid_moves_for_rook(pBoard, loc);
+            return valid_moves_for_rook(&board, loc);
 
         case PIECE_KNIGHT:
-            return valid_moves_for_knight(pBoard, loc);
+            return valid_moves_for_knight(&board, loc);
         
         case PIECE_BISHOP:
-            return valid_moves_for_bishop(pBoard, loc);
+            return valid_moves_for_bishop(&board, loc);
 
         case PIECE_QUEEN:
-            return valid_moves_for_queen(pBoard, loc);
+            return valid_moves_for_queen(&board, loc);
 
         case PIECE_KING:
         case PIECE_KING_FIRST:
-            return valid_moves_for_king(pBoard, loc);
+            return valid_moves_for_king(&board, loc);
 
         default:
             std::cout << "[Error] unhandled piece: " << piece << std::endl;

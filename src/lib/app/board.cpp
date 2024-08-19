@@ -73,14 +73,16 @@ ReturnCode_e Board::clear_piece(Location loc){
 }
 
 void print_board(Board board){
-    std::cout << "   A  B  C  D  E  F  G  H" << std::endl;
+    std::cout << "     0  1  2  3  4  5  6  7" << std::endl;
+    std::cout << "     A  B  C  D  E  F  G  H" << std::endl;
     for(int row = 0; row < BOARD_ROW_COUNT; row++){
-        std::cout << 8 - row << " ";
+        std::cout << row << " " << 8 - row << " ";
         for(int col = 0; col < BOARD_COL_COUNT; col++){
             std::cout << board.get_piece(Location(row, col)).symbol() << " ";
         }
-        std::cout << " " << 8 - row << " ";
+        std::cout << 8 - row << " " << row;
         std::cout << std::endl;
     }
-    std::cout << "   A  B  C  D  E  F  G  H" << std::endl;
+    std::cout << "     A  B  C  D  E  F  G  H" << std::endl;
+    std::cout << "     0  1  2  3  4  5  6  7" << std::endl;
 }

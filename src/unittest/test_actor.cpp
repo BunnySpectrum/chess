@@ -33,7 +33,7 @@ void test_actor_pawn(void)
 
   // auto result = std::vector<Location>();
 
-  auto moves = valid_moves_for_piece(&board, loc);
+  auto moves = valid_moves_for_piece(board, loc);
   for(const Location& loc : moves){
     std::cout << loc << std::endl;
   }
