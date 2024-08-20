@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}-sim
     lib/app/piece.cpp
     lib/app/board.cpp
     lib/app/actor.cpp
+    lib/app/game.cpp
 )
 
 add_library(Unity STATIC
@@ -31,6 +32,7 @@ add_executable(${PROJECT_NAME}-test
     unittest/test_actor.cpp
     lib/app/piece.cpp
     lib/app/board.cpp
+    lib/app/game.cpp
     lib/app/actor.cpp
 
 )
