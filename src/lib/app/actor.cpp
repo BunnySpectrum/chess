@@ -144,6 +144,7 @@ static std::vector<Location> find_moves_line(const Board* pBoard, Location start
             return result;
     }
 
+    startPiece = pBoard->get_piece(startLoc);
     deltaRow = rowInc;
     deltaCol = colInc;
     testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
@@ -172,7 +173,7 @@ std::vector<Location> valid_moves_for_pawn(const Board* pBoard, Location startLo
 
     startPiece = pBoard->get_piece(startLoc);
     int direction = startPiece.color() == COLOR_WHITE ? -1 : 1;
-    std::cout << "Testing piece: " << startPiece << std::endl;
+    // std::cout << "Testing piece: " << startPiece << std::endl;
 
     // right-diagonal
     testLoc = Location(startLoc.row() + direction, startLoc.col() + 1);
@@ -220,7 +221,7 @@ std::vector<Location> valid_moves_for_rook(const Board* pBoard, Location startLo
     Piece testPiece, startPiece;
 
     startPiece = pBoard->get_piece(startLoc);
-    std::cout << "Testing piece: " << startPiece << std::endl;
+    // std::cout << "Testing piece: " << startPiece << std::endl;
 
     std::array<SearchDirection_e, 4> directions = {SEARCH_UP, SEARCH_RIGHT, SEARCH_DOWN, SEARCH_LEFT};
 
@@ -238,7 +239,7 @@ std::vector<Location> valid_moves_for_knight(const Board* pBoard, Location start
     int deltaRow, deltaCol;
 
     startPiece = pBoard->get_piece(startLoc);
-    std::cout << "Testing piece: " << startPiece << std::endl;
+    // std::cout << "Testing piece: " << startPiece << std::endl;
 
     std::vector<Location> locationsToTest{
         {startLoc.row() + 2, startLoc.col() + 1}, 
@@ -276,7 +277,7 @@ std::vector<Location> valid_moves_for_bishop(const Board* pBoard, Location start
     std::array<SearchDirection_e, 4> directions = {SEARCH_UPRIGHT, SEARCH_DOWNRIGHT, SEARCH_DOWNLEFT, SEARCH_UPLEFT};
 
     startPiece = pBoard->get_piece(startLoc);
-    std::cout << "Testing piece (again): " << startPiece << std::endl;
+    // std::cout << "Testing piece (again): " << startPiece << std::endl;
 
     for(const SearchDirection_e dir : directions){
         for(const Location& loc : find_moves_line(pBoard, startLoc, dir)){
@@ -294,7 +295,7 @@ std::vector<Location> valid_moves_for_king(const Board* pBoard, Location startLo
     int deltaRow, deltaCol;
 
     startPiece = pBoard->get_piece(startLoc);
-    std::cout << "Testing piece: " << startPiece << std::endl;
+    // std::cout << "Testing piece: " << startPiece << std::endl;
     for(deltaRow = -1; deltaRow < 2; deltaRow++){
         for(deltaCol = -1; deltaCol < 2; deltaCol++){
             if((deltaRow == 0) && (deltaCol == 0)){
@@ -324,7 +325,7 @@ std::vector<Location> valid_moves_for_queen(const Board* pBoard, Location startL
         };
 
     startPiece = pBoard->get_piece(startLoc);
-    std::cout << "Testing piece: " << startPiece << std::endl;
+    // std::cout << "Testing piece: " << startPiece << std::endl;
 
     for(const SearchDirection_e dir : directions){
         for(const Location& loc : find_moves_line(pBoard, startLoc, dir)){

@@ -2,28 +2,36 @@
 #include "game.h"
 
 
+Player::Player(PieceColor_e color) : color_(color){
+    ;
+}
+
+MoveRequest_s Player::pick_move(const Board& board){
+    int row, col;
+    Piece piece;
+    std::vector<Location> moves;
+    MoveRequest_s move;
+
+    for(row = 0; row < BOARD_ROW_COUNT; row++){
+        for(col = 0; col < BOARD_COL_COUNT; col++){
+            // piece = board.get_piece(Location(row, col));
+            moves = valid_moves_for_piece(board, Location(row, col));
+            if(moves.size() > 0){
+                move.locStart = Location(row, col);
+                move.locEnd = moves[0];
+                return move;
+            }
+        }
+    }
+    return move;
+}
+
+
 bool receive_input(std::string *input){
     std::getline(std::cin, *input);
     return !input->empty();
 }
 
-enum class InputState{
-    Start,
-    First,
-    Delim,
-    Second,
-    End
-};
-
-typedef struct InputTokens{
-    std::string leftToken;
-    std::string rightToken;
-}InputToken_s;
-
-typedef struct MoveRequest{
-    Location locStart;
-    Location locEnd;
-}MoveRequest_s;
 
 Location process_alg_token(const std::string &token){
     char first = token[0];
@@ -133,15 +141,18 @@ Game::Game(){
 
 void Game::Run(){
     std::cout << "Starting game." << std::endl;
-    
+
     std::vector<Location> validMoves;
     std::string stroke;
     MoveRequest_s nextMove;
 
+    Player computer(COLOR_BLACK);
+
 
     while(receive_input(&stroke)){
+        // Human move
         nextMove = process_input(stroke);
-        std::cout << "Move from " << nextMove.locStart << " to " << nextMove.locEnd << std::endl;
+        // std::cout << "Move from " << nextMove.locStart << " to " << nextMove.locEnd << std::endl;
         if(nextMove.locStart.is_invalid() || nextMove.locEnd.is_invalid()){
             std::cout << "\t Invalid move." << std::endl;
             continue;
@@ -150,14 +161,21 @@ void Game::Run(){
         validMoves = valid_moves_for_piece(board, nextMove.locStart);
         if(std::find(validMoves.cbegin(), validMoves.cend(), nextMove.locEnd) != validMoves.cend()){
             // locEnd is a valid move
-            std::cout << "\t Valid." << std::endl; 
+            // std::cout << "\t Valid." << std::endl; 
             move_piece(&board, nextMove.locStart, nextMove.locEnd);
         }else{
             std::cout << "\t Invalid." << std::endl;
         }
         
         print_board(board);
+        std::cout << std::endl;
 
+        nextMove = computer.pick_move(board);
+        std::cout << "CPU Move from " << nextMove.locStart << " to " << nextMove.locEnd << std::endl;
+        move_piece(&board, nextMove.locStart, nextMove.locEnd);
+
+        print_board(board);
+        std::cout << std::endl;
     }
 
 
