@@ -2,6 +2,7 @@
 
 #include "app/piece.h"
 #include "app/actor.h"
+#include <optional>
 
 enum class InputState{
     Start,
@@ -24,10 +25,23 @@ typedef struct MoveRequest{
 class Player{
     public:
         Player(PieceColor_e color);
-        MoveRequest_s pick_move(const Board& board);
+        virtual std::optional<MoveRequest_s> pick_move(const Board& board) = 0;
+        virtual ~Player() = default;
 
-    private:
+    protected:
         PieceColor_e color_;
+};
+
+class HumanPlayer final : public Player{
+    public:
+        HumanPlayer(PieceColor_e color);
+        std::optional<MoveRequest_s> pick_move(const Board& board);
+};
+
+class CpuPlayer final : public Player{
+    public:
+        CpuPlayer(PieceColor_e color);
+        std::optional<MoveRequest_s> pick_move(const Board& board);
 };
 
 class Game{
