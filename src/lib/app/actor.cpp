@@ -304,7 +304,7 @@ std::vector<Location> valid_moves_for_king(const Board* pBoard, Location startLo
             testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
             if(!testLoc.is_invalid()){
                 testPiece = pBoard->get_piece(testLoc);
-                if( (testPiece.id() != PIECE_NOTHING) || (testPiece.color() != startPiece.color())){
+                if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
                     result.push_back(testLoc);
                 }
             }

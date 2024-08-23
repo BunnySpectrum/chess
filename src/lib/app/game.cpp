@@ -149,6 +149,12 @@ std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
     std::vector<Location> moves;
     MoveRequest_s move;
 
+    auto pieceLocations = board.getLocationsForColor(color_);
+    for(const Location& loc : pieceLocations){
+        std::cout << loc << ", ";
+    }
+    std::cout << std::endl;
+
     for(row = 0; row < BOARD_ROW_COUNT; row++){
         for(col = 0; col < BOARD_COL_COUNT; col++){
             // piece = board.get_piece(Location(row, col));

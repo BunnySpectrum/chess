@@ -72,6 +72,26 @@ ReturnCode_e Board::clear_piece(Location loc){
     return this->set_piece(loc, Piece(PIECE_NOTHING, COLOR_WHITE, loc));
 }
 
+
+std::vector<Location> Board::getLocationsForColor(PieceColor_e color) const{
+    auto result = std::vector<Location>{};
+    int row, col;
+    Location loc;
+    
+    for(int row = 0; row < BOARD_ROW_COUNT; row++){
+        for(int col = 0; col < BOARD_COL_COUNT; col++){
+            loc = Location(row, col);
+            auto piece = get_piece(loc);
+            if((piece.id() != PIECE_NOTHING) && (piece.color() == color)){
+                result.push_back(loc);
+            }
+        }
+    }
+
+    return result;
+}
+
+
 void print_board(Board board){
     // std::cout << "     0  1  2  3  4  5  6  7" << std::endl;
     std::cout << "   A  B  C  D  E  F  G  H" << std::endl;
