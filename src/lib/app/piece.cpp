@@ -115,21 +115,14 @@ std::string pieceColorToSymbol(PieceColor_e color){
 Piece::Piece(){
     id_ = PIECE_NOTHING;
     color_ = COLOR_WHITE;
-    loc_ = Location(-1, -1);
 };
 
-Piece::Piece(PieceName_e id, PieceColor_e color, Location loc): 
+Piece::Piece(PieceName_e id, PieceColor_e color): 
 id_(id),
-color_(color),
-loc_(loc){
+color_(color){
     ;
 }
 
-// Piece::Piece(PieceName_e id, Location loc): 
-// id_(id),
-// loc_(loc){
-//     ;
-// }
 
 PieceName_e Piece::id() const{
     return id_;
@@ -147,41 +140,12 @@ std::string Piece::symbol() const{
     }
 }
 
-Location Piece::location() const{
-    return loc_;
-}
-
-ReturnCode_e Piece::move(Location newLoc){
-
-    // determine id for new destination piece
-    auto newID = PIECE_NOTHING;
-    switch(this->id()){
-        case PIECE_PAWN_FIRST:
-            newID = PIECE_PAWN;
-            break;
-        case PIECE_KING_FIRST:
-            newID = PIECE_KING;
-            break;
-        case PIECE_ROOK_FIRST:
-            newID = PIECE_ROOK;
-            break;
-        default:
-            newID = this->id();
-            break;
-    }
-    this->id_ = newID;
-    return RC_SUCCESS;
-}
-
-
-
 std::ostream &operator<<(std::ostream &os, Piece const &piece){
-    return os << piece.symbol() << " at " << piece.location();
+    return os << piece.symbol();
 }
 
 bool Piece::operator==(const Piece &otherPiece) const{
-    if( (this->location() == otherPiece.location()) && 
-        (this->id() == otherPiece.id()) &&
+    if( (this->id() == otherPiece.id()) &&
         (this->color() == otherPiece.color()) ){
         return true;
     }else{
@@ -189,10 +153,3 @@ bool Piece::operator==(const Piece &otherPiece) const{
     }
 }
 
-// std::ostream &operator<<(std::ostream os, Piece const &piece){
-//     return os << " at ";// << piece.loc;
-// }
-
-// void print_piece(Piece piece){
-//     std::cout << pieceNameToString(piece.id()) << " at " << piece.location().row() << ", " << piece.location().col() << std::endl;
-// }

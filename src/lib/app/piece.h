@@ -53,19 +53,17 @@ typedef enum PieceColor{
 class Piece{
     public:
         Piece();
+        Piece(PieceName_e id, PieceColor_e color);
         Piece(PieceName_e id, PieceColor_e color, Location loc);
         PieceName_e id() const;
         PieceColor_e color() const;
-        Location location() const;
         std::string symbol() const;
-        ReturnCode_e move(Location newLoc);
         bool operator==(const Piece &otherPiece) const;
         friend std::ostream &operator<<(std::ostream &os, Piece const &piece);  
 
     private:
         PieceName_e id_;
         PieceColor_e color_;
-        Location loc_;
 };
 
 std::string pieceNameToString(PieceName_e piece);

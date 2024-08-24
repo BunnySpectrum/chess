@@ -16,7 +16,7 @@ ReturnCode_e move_piece(Board* board, Location startLoc, Location endLoc){
 
 
     // clear starting location 
-    board->set_piece(startLoc, Piece(PIECE_NOTHING, COLOR_WHITE, startLoc));
+    board->set_piece(startLoc, Piece(PIECE_NOTHING, COLOR_WHITE));
 
     // determine id for new destination piece
     auto newID = PIECE_NOTHING;
@@ -36,7 +36,7 @@ ReturnCode_e move_piece(Board* board, Location startLoc, Location endLoc){
     }
 
     // set end piece
-    board->set_piece(endLoc, Piece(newID, startPiece.color(), endLoc));
+    board->set_piece(endLoc, Piece(newID, startPiece.color()));
 
     return RC_SUCCESS;
 }
@@ -304,7 +304,7 @@ std::vector<Location> valid_moves_for_king(const Board* pBoard, Location startLo
             testLoc = Location(startLoc.row() + deltaRow, startLoc.col() + deltaCol);
             if(!testLoc.is_invalid()){
                 testPiece = pBoard->get_piece(testLoc);
-                if( (testPiece.id() != PIECE_NOTHING) && (testPiece.color() != startPiece.color())){
+                if( (testPiece.id() != PIECE_NOTHING) || (testPiece.color() != startPiece.color())){
                     result.push_back(testLoc);
                 }
             }

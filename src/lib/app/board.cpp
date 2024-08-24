@@ -11,25 +11,25 @@ void init_standard_board(Board* pBoard){
             loc = Location(row, col);
 
             if(row == 1 || row == 6){
-                pBoard->set_piece(loc, Piece(PIECE_PAWN_FIRST, color, loc));
+                pBoard->set_piece(loc, Piece(PIECE_PAWN_FIRST, color));
             }
             else if((row==0 || row==7) && (col==0 || col==7)){
-                pBoard->set_piece(loc, Piece(PIECE_ROOK_FIRST, color, loc));
+                pBoard->set_piece(loc, Piece(PIECE_ROOK_FIRST, color));
             }
             else if((row==0 || row==7) && (col==1 || col==6)){
-                pBoard->set_piece(loc, Piece(PIECE_KNIGHT, color, loc));
+                pBoard->set_piece(loc, Piece(PIECE_KNIGHT, color));
             }
             else if((row==0 || row==7) && (col==2 || col==5)){
-                pBoard->set_piece(loc, Piece(PIECE_BISHOP, color, loc));
+                pBoard->set_piece(loc, Piece(PIECE_BISHOP, color));
             }
             else if((row==0 || row==7) && (col==3)){
-                pBoard->set_piece(loc, Piece(PIECE_QUEEN, color, loc));
+                pBoard->set_piece(loc, Piece(PIECE_QUEEN, color));
             }
             else if((row==0 || row==7) && (col==4)){
-                pBoard->set_piece(loc, Piece(PIECE_KING_FIRST, color, loc));
+                pBoard->set_piece(loc, Piece(PIECE_KING_FIRST, color));
             }
             else{
-                pBoard->set_piece(loc, Piece(PIECE_NOTHING, color, loc));
+                pBoard->set_piece(loc, Piece(PIECE_NOTHING, color));
             }
         }
     }
@@ -44,7 +44,7 @@ Board::Board(){
 
             loc = Location(row, col);
             
-            board_[col][row] = Piece(PIECE_NOTHING, COLOR_WHITE, loc);
+            board_[col][row] = Piece(PIECE_NOTHING, COLOR_WHITE);
 
         }
     }
@@ -53,7 +53,7 @@ Board::Board(){
         
 Piece Board::get_piece(Location loc) const{
     if(loc.is_invalid()){
-        return Piece(PIECE_NOTHING, COLOR_WHITE, loc);
+        return Piece(PIECE_NOTHING, COLOR_WHITE);
     }
     return board_[loc.col()][loc.row()];
 }
@@ -69,7 +69,7 @@ ReturnCode_e Board::set_piece(Location loc, Piece piece){
 }
 
 ReturnCode_e Board::clear_piece(Location loc){
-    return this->set_piece(loc, Piece(PIECE_NOTHING, COLOR_WHITE, loc));
+    return this->set_piece(loc, Piece(PIECE_NOTHING, COLOR_WHITE));
 }
 
 

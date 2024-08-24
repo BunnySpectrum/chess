@@ -25,7 +25,7 @@ void test_actor_pawn(void)
   auto board = Board();
   // init_standard_board(&board);
 
-  auto pawn = Piece(PIECE_PAWN_FIRST, COLOR_BLACK, loc);
+  auto pawn = Piece(PIECE_PAWN_FIRST, COLOR_BLACK);
   
   board.set_piece(loc, pawn);
 
