@@ -26,6 +26,8 @@ typedef struct InputTokens{
 typedef struct MoveRequest{
     Location locStart;
     Location locEnd;
+    Piece pieceStart;
+    Piece pieceEnd;
 }MoveRequest_s;
 // AIChess uses the start/endPiece.color to determine if a move is a protect
 // or threat. It also has a 'real' bool for if the move is a legal move (i.e. not protect).

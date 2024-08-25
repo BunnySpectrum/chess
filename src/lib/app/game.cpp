@@ -127,9 +127,15 @@ std::optional<MoveRequest_s> HumanPlayer::pick_move(const Board& board) {
             continue;
         }
 
+
         validMoves = valid_moves_for_piece(board, nextMove.locStart);
         if(std::find(validMoves.cbegin(), validMoves.cend(), nextMove.locEnd) != validMoves.cend()){
             // locEnd is a valid move
+        
+            // TODO refactor so move created in one step
+            nextMove.pieceStart = board.get_piece(nextMove.locStart);
+            nextMove.pieceEnd = board.get_piece(nextMove.locEnd);
+
             return nextMove;
         }else{
             std::cout << "\t Invalid." << std::endl;
@@ -162,6 +168,8 @@ std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
             if(moves.size() > 0){
                 move.locStart = Location(row, col);
                 move.locEnd = moves[0];
+                move.pieceStart = board.get_piece(move.locStart);
+                move.pieceEnd = board.get_piece(move.locEnd);
                 return move;
             }
         }
