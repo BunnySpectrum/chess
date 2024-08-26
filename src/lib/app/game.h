@@ -28,6 +28,12 @@ typedef struct MoveRequest{
     Location locEnd;
     Piece pieceStart;
     Piece pieceEnd;
+    std::string desc(){
+        std::string result;
+        result += pieceNameToString(pieceStart.id()) + " to ";
+        result += locationToAlg(locEnd);
+        return result;
+    }
 }MoveRequest_s;
 // AIChess uses the start/endPiece.color to determine if a move is a protect
 // or threat. It also has a 'real' bool for if the move is a legal move (i.e. not protect).
@@ -44,8 +50,9 @@ typedef struct MoveRequest{
 class Player{
     public:
         Player(PieceColor_e color);
-        virtual std::optional<MoveRequest_s> pick_move(const Board& board) = 0;
         virtual ~Player() = default;
+        virtual std::optional<MoveRequest_s> pick_move(const Board& board) = 0;
+        virtual int32_t score(const Board& board) = 0;
 
     protected:
         PieceColor_e color_;
@@ -55,12 +62,14 @@ class HumanPlayer final : public Player{
     public:
         HumanPlayer(PieceColor_e color);
         std::optional<MoveRequest_s> pick_move(const Board& board);
+        int32_t score(const Board& board);
 };
 
 class CpuPlayer final : public Player{
     public:
         CpuPlayer(PieceColor_e color);
         std::optional<MoveRequest_s> pick_move(const Board& board);
+        int32_t score(const Board& board);
 };
 
 class Game{

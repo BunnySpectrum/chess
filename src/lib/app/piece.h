@@ -66,6 +66,7 @@ class Piece{
         PieceColor_e color_;
 };
 
+std::string locationToAlg(const Location loc);
 std::string pieceNameToString(PieceName_e piece);
 std::string pieceNameToSymbol(PieceName_e piece);
 std::string pieceColorToSymbol(PieceColor_e color);

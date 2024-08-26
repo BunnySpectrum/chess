@@ -114,6 +114,10 @@ HumanPlayer::HumanPlayer(PieceColor_e color) : Player{color}{
     ;
 }
 
+int32_t HumanPlayer::score(const Board& board){
+    return 0;
+}
+
 std::optional<MoveRequest_s> HumanPlayer::pick_move(const Board& board) {
     std::vector<Location> validMoves;
     std::string stroke;
@@ -149,31 +153,50 @@ CpuPlayer::CpuPlayer(PieceColor_e color) : Player{color}{
     ;
 }
 
+int32_t CpuPlayer::score(const Board& board){
+    auto pieceLocations = board.getLocationsForColor(color_);
+    // Pawn advancement
+    // +0 if on starting row
+    // +1 for each row
+    int32_t pawnScore = 0;
+    int pawnHomeRow = color_ == COLOR_BLACK ? 1 : 6;
+    for(const Location pieceLoc : pieceLocations){
+        Piece piece = board.get_piece(pieceLoc);
+        if( (piece.id() == PIECE_PAWN) || (piece.id() == PIECE_PAWN_FIRST)){
+            pawnScore += abs(pieceLoc.row() - pawnHomeRow);
+        }
+    }
+    return pawnScore;
+}
+
 std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
-    int row, col;
-    Piece piece;
-    std::vector<Location> moves;
+    std::vector<Location> endLocations;
     MoveRequest_s move;
+    int32_t bestScore = INT32_MIN;
 
     auto pieceLocations = board.getLocationsForColor(color_);
-    for(const Location& loc : pieceLocations){
-        std::cout << loc << ", ";
-    }
-    std::cout << std::endl;
+    for(const Location& startLoc : pieceLocations){
+        std::cout << locationToAlg(startLoc) << std::endl;
+        
+        endLocations = valid_moves_for_piece(board, startLoc);
+        for(const Location testLoc : endLocations){
+            Board testBoard = board;
 
-    for(row = 0; row < BOARD_ROW_COUNT; row++){
-        for(col = 0; col < BOARD_COL_COUNT; col++){
-            // piece = board.get_piece(Location(row, col));
-            moves = valid_moves_for_piece(board, Location(row, col));
-            if(moves.size() > 0){
-                move.locStart = Location(row, col);
-                move.locEnd = moves[0];
-                move.pieceStart = board.get_piece(move.locStart);
-                move.pieceEnd = board.get_piece(move.locEnd);
-                return move;
+            move_piece(&testBoard, startLoc, testLoc);
+            auto testScore = score(testBoard);
+            std::cout << "  " << locationToAlg(testLoc);
+            std::cout << " " << testScore << std::endl;
+            if(testScore > bestScore){
+                bestScore = testScore;
+                move.locStart = startLoc;
+                move.locEnd = testLoc;
+                move.pieceStart = testBoard.get_piece(move.locStart);
+                move.pieceEnd = testBoard.get_piece(move.locEnd);
             }
         }
     }
+    std::cout << std::endl;
+
     return move;
 }
 

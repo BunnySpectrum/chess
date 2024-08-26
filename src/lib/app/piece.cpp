@@ -40,7 +40,12 @@ bool Location::operator==(const Location &otherLoc) const{
     }
 }
 
-
+std::string locationToAlg(const Location loc){
+    std::string result;
+    result += ('A'+loc.col());
+    result += ('8'-loc.row());
+    return result;
+}
 // -----------------------------
 
 // std::string Location::repr(){
