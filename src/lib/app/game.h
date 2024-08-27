@@ -70,6 +70,10 @@ class CpuPlayer final : public Player{
         CpuPlayer(PieceColor_e color);
         std::optional<MoveRequest_s> pick_move(const Board& board);
         int32_t score(const Board& board);
+        std::optional<MoveRequest_s> search_for_move(const Board& board, int depth, int32_t bestScore);
+    
+    private:
+        int max_search_depth;
 };
 
 class Game{

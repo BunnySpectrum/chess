@@ -169,10 +169,9 @@ int32_t CpuPlayer::score(const Board& board){
     return pawnScore;
 }
 
-std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
+std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board, int depth, int32_t bestScore){
     std::vector<Location> endLocations;
     MoveRequest_s move;
-    int32_t bestScore = INT32_MIN;
 
     auto pieceLocations = board.getLocationsForColor(color_);
     for(const Location& startLoc : pieceLocations){
@@ -184,6 +183,7 @@ std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
 
             move_piece(&testBoard, startLoc, testLoc);
             auto testScore = score(testBoard);
+            
             std::cout << "  " << locationToAlg(testLoc);
             std::cout << " " << testScore << std::endl;
             if(testScore > bestScore){
@@ -196,8 +196,14 @@ std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
         }
     }
     std::cout << std::endl;
-
     return move;
+}
+
+std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
+    int32_t bestScore = INT32_MIN;
+    max_search_depth = 3;
+
+    return search_for_move(board, 1, bestScore);
 }
 
 
@@ -207,8 +213,6 @@ Game::Game(){
 
     print_board(board);
     std::cout << std::endl;
-
-
 }
 
 void Game::Run(){
@@ -242,7 +246,7 @@ void Game::Run(){
             }
             auto nextMove = optNextMove.value();
 
-            std::cout << "CPU Move from " << nextMove.locStart << " to " << nextMove.locEnd << std::endl;
+            std::cout << "CPU Move from " << locationToAlg(nextMove.locStart) << " to " << locationToAlg(nextMove.locEnd) << std::endl;
             move_piece(&board, nextMove.locStart, nextMove.locEnd);
         }
 
