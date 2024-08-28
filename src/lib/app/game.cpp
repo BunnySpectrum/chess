@@ -114,9 +114,9 @@ HumanPlayer::HumanPlayer(PieceColor_e color) : Player{color}{
     ;
 }
 
-int32_t HumanPlayer::score(const Board& board){
-    return 0;
-}
+// int32_t HumanPlayer::score(const Board& board){
+//     return 0;
+// }
 
 std::optional<MoveRequest_s> HumanPlayer::pick_move(const Board& board) {
     std::vector<Location> validMoves;
@@ -153,13 +153,13 @@ CpuPlayer::CpuPlayer(PieceColor_e color) : Player{color}{
     ;
 }
 
-int32_t CpuPlayer::score(const Board& board){
-    auto pieceLocations = board.getLocationsForColor(color_);
+int32_t CpuPlayer::score(const Board& board, PieceColor_e color){
+    auto pieceLocations = board.getLocationsForColor(color);
     // Pawn advancement
     // +0 if on starting row
     // +1 for each row
     int32_t pawnScore = 0;
-    int pawnHomeRow = color_ == COLOR_BLACK ? 1 : 6;
+    int pawnHomeRow = color == COLOR_BLACK ? 1 : 6;
     for(const Location pieceLoc : pieceLocations){
         Piece piece = board.get_piece(pieceLoc);
         if( (piece.id() == PIECE_PAWN) || (piece.id() == PIECE_PAWN_FIRST)){
@@ -169,41 +169,65 @@ int32_t CpuPlayer::score(const Board& board){
     return pawnScore;
 }
 
-std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board, int depth, int32_t bestScore){
+std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board, int depth, bool self){
     std::vector<Location> endLocations;
-    MoveRequest_s move;
+    std::optional<MoveRequest_s> finalMove;// = std::nullopt;
 
-    auto pieceLocations = board.getLocationsForColor(color_);
+    std::vector<MoveRequest_s> possibleMoves;
+    auto searchColor = self ? color_ : COLOR_WHITE;
+
+    // Get list of all locations where we have a piece
+    auto pieceLocations = board.getLocationsForColor(searchColor);
+
     for(const Location& startLoc : pieceLocations){
-        std::cout << locationToAlg(startLoc) << std::endl;
+        std::cout << depth << " " << locationToAlg(startLoc) << std::endl;
         
+        // For each location, get a list of locations that piece could move to
         endLocations = valid_moves_for_piece(board, startLoc);
+
         for(const Location testLoc : endLocations){
+            // Need a copy of the board to make changes.
+            // In the future could undo moves to prevent this copy.
             Board testBoard = board;
 
+            // For each possible move, do it, then calculate a score.
             move_piece(&testBoard, startLoc, testLoc);
-            auto testScore = score(testBoard);
+            auto testScore = score(testBoard, searchColor);
             
-            std::cout << "  " << locationToAlg(testLoc);
-            std::cout << " " << testScore << std::endl;
-            if(testScore > bestScore){
-                bestScore = testScore;
-                move.locStart = startLoc;
-                move.locEnd = testLoc;
-                move.pieceStart = testBoard.get_piece(move.locStart);
-                move.pieceEnd = testBoard.get_piece(move.locEnd);
-            }
+            std::cout << std::string(depth*2, ' ') << locationToAlg(testLoc);
+            std::cout << std::string(depth*2 - 1, ' ') << testScore << std::endl;
+
+            auto& move = possibleMoves.emplace_back();
+            move.locStart = startLoc;
+            move.locEnd = testLoc;
+            move.pieceStart = testBoard.get_piece(move.locStart);
+            move.pieceEnd = testBoard.get_piece(move.locEnd);
+            move.score = testScore;
+
+
+            // Determine other player's best move
+            search_for_move(testBoard, depth, false);
         }
     }
     std::cout << std::endl;
-    return move;
+
+    // Go through the moves we found and return the best one
+    int32_t bestScore = INT32_MIN;
+    for(const MoveRequest_s& candidateMove : possibleMoves){
+        if(candidateMove.score > bestScore){
+            finalMove = candidateMove;
+            bestScore = candidateMove.score;
+        }
+    }
+
+    return finalMove;
 }
 
 std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
     int32_t bestScore = INT32_MIN;
     max_search_depth = 3;
 
-    return search_for_move(board, 1, bestScore);
+    return search_for_move(board, 1, true);
 }
 
 

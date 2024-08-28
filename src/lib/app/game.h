@@ -28,6 +28,7 @@ typedef struct MoveRequest{
     Location locEnd;
     Piece pieceStart;
     Piece pieceEnd;
+    int32_t score;
     std::string desc(){
         std::string result;
         result += pieceNameToString(pieceStart.id()) + " to ";
@@ -52,7 +53,7 @@ class Player{
         Player(PieceColor_e color);
         virtual ~Player() = default;
         virtual std::optional<MoveRequest_s> pick_move(const Board& board) = 0;
-        virtual int32_t score(const Board& board) = 0;
+        // virtual int32_t score(const Board& board) = 0;
 
     protected:
         PieceColor_e color_;
@@ -62,15 +63,15 @@ class HumanPlayer final : public Player{
     public:
         HumanPlayer(PieceColor_e color);
         std::optional<MoveRequest_s> pick_move(const Board& board);
-        int32_t score(const Board& board);
+        // int32_t score(const Board& board);
 };
 
 class CpuPlayer final : public Player{
     public:
         CpuPlayer(PieceColor_e color);
         std::optional<MoveRequest_s> pick_move(const Board& board);
-        int32_t score(const Board& board);
-        std::optional<MoveRequest_s> search_for_move(const Board& board, int depth, int32_t bestScore);
+        int32_t score(const Board& board, PieceColor_e color);
+        std::optional<MoveRequest_s> search_for_move(const Board& board, int depth, bool self);
     
     private:
         int max_search_depth;
