@@ -71,7 +71,9 @@ class CpuPlayer final : public Player{
         CpuPlayer(PieceColor_e color);
         std::optional<MoveRequest_s> pick_move(const Board& board);
         int32_t score(const Board& board, PieceColor_e color);
-        std::optional<MoveRequest_s> search_for_move(const Board& board, int depth, bool self);
+        std::optional<MoveRequest_s> search_for_move(const Board& board);
+        int32_t negamax(const Board& board, int depth, PieceColor_e color);
+
     
     private:
         int max_search_depth;

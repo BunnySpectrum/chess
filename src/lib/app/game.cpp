@@ -169,47 +169,68 @@ int32_t CpuPlayer::score(const Board& board, PieceColor_e color){
     return pawnScore;
 }
 
-std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board, int depth, bool self){
+int32_t CpuPlayer::negamax(const Board& board, int depth, PieceColor_e color){
     std::vector<Location> endLocations;
     std::optional<MoveRequest_s> finalMove;// = std::nullopt;
-
     std::vector<MoveRequest_s> possibleMoves;
-    auto searchColor = self ? color_ : COLOR_WHITE;
+
+    if(depth == 0){
+        // At the extent of the search. 
+        // Score this board
+        auto scale = color == color_ ? 1 : -1;
+        return score(board, color) * scale;
+    }else{
+        // Build a new board of possible moves for the other color
+        // Then recurse
+        auto pieceLocations = board.getLocationsForColor(color);
+    
+        for(const Location& startLoc : pieceLocations){
+            endLocations = valid_moves_for_piece(board, startLoc);
+
+            for(const Location testLoc : endLocations){
+                Board testBoard = board;
+                move_piece(&testBoard, startLoc, testLoc);
+                
+                auto nextColor = color == COLOR_BLACK ? COLOR_WHITE : COLOR_BLACK;
+                return negamax(testBoard, depth-1, nextColor);
+            }
+        }
+    }
+    return INT32_MIN;
+}
+
+
+std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board){
+    std::vector<Location> endLocations;
+    std::optional<MoveRequest_s> finalMove;// = std::nullopt;
+    std::vector<MoveRequest_s> possibleMoves;
 
     // Get list of all locations where we have a piece
-    auto pieceLocations = board.getLocationsForColor(searchColor);
+    auto pieceLocations = board.getLocationsForColor(color_);
+
+    auto nextColor = color_ == COLOR_BLACK ? COLOR_WHITE : COLOR_BLACK;
 
     for(const Location& startLoc : pieceLocations){
-        std::cout << depth << " " << locationToAlg(startLoc) << std::endl;
-        
         // For each location, get a list of locations that piece could move to
         endLocations = valid_moves_for_piece(board, startLoc);
-
+        
+        // For each move, search the tree and get the best score from the end.
         for(const Location testLoc : endLocations){
-            // Need a copy of the board to make changes.
-            // In the future could undo moves to prevent this copy.
             Board testBoard = board;
-
-            // For each possible move, do it, then calculate a score.
             move_piece(&testBoard, startLoc, testLoc);
-            auto testScore = score(testBoard, searchColor);
-            
-            std::cout << std::string(depth*2, ' ') << locationToAlg(testLoc);
-            std::cout << std::string(depth*2 - 1, ' ') << testScore << std::endl;
 
+            auto score = negamax(board, max_search_depth, nextColor);
+
+            // At this point we have the best score from going down this branch
             auto& move = possibleMoves.emplace_back();
             move.locStart = startLoc;
             move.locEnd = testLoc;
             move.pieceStart = testBoard.get_piece(move.locStart);
             move.pieceEnd = testBoard.get_piece(move.locEnd);
-            move.score = testScore;
+            move.score = score;
 
-
-            // Determine other player's best move
-            search_for_move(testBoard, depth, false);
         }
     }
-    std::cout << std::endl;
 
     // Go through the moves we found and return the best one
     int32_t bestScore = INT32_MIN;
@@ -224,10 +245,9 @@ std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board, int 
 }
 
 std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
-    int32_t bestScore = INT32_MIN;
-    max_search_depth = 3;
+    max_search_depth = 2;
 
-    return search_for_move(board, 1, true);
+    return search_for_move(board);
 }
 
 
