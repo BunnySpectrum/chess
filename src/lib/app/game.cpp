@@ -153,20 +153,56 @@ CpuPlayer::CpuPlayer(PieceColor_e color) : Player{color}{
     ;
 }
 
+enum Material : int32_t{
+    Pawn = 1,
+    Bishop = 3,
+    Knight = 3,
+    Rook = 5,
+    Queen = 9,
+    King = 100
+};
+
 int32_t CpuPlayer::score(const Board& board, PieceColor_e color){
     auto pieceLocations = board.getLocationsForColor(color);
     // Pawn advancement
     // +0 if on starting row
     // +1 for each row
     int32_t pawnScore = 0;
+    int32_t materialScore = 0;
+
+
     int pawnHomeRow = color == COLOR_BLACK ? 1 : 6;
     for(const Location pieceLoc : pieceLocations){
         Piece piece = board.get_piece(pieceLoc);
-        if( (piece.id() == PIECE_PAWN) || (piece.id() == PIECE_PAWN_FIRST)){
-            pawnScore += abs(pieceLoc.row() - pawnHomeRow);
+        switch(piece.id()){
+            case PIECE_PAWN:
+            case PIECE_PAWN_FIRST:
+                pawnScore += abs(pieceLoc.row() - pawnHomeRow);
+                materialScore += Material::Pawn;
+                break;
+            case PIECE_BISHOP:
+                materialScore += Material::Bishop;
+                break;
+            case PIECE_KNIGHT:
+                materialScore += Material::Knight;
+                break;
+            case PIECE_ROOK:
+            case PIECE_ROOK_FIRST:
+                materialScore += Material::Rook;
+                break;
+            case PIECE_QUEEN:
+                materialScore += Material::Queen;
+                break;
+            case PIECE_KING:
+            case PIECE_KING_FIRST:
+                materialScore += Material::King;
+                break;
+            default:
+                break;
         }
     }
-    return pawnScore;
+    // std::cout << pieceColorToSymbol(color) << " " << pawnScore << std::endl;
+    return pawnScore + materialScore*10;
 }
 
 int32_t CpuPlayer::negamax(const Board& board, int depth, PieceColor_e color){
@@ -174,10 +210,13 @@ int32_t CpuPlayer::negamax(const Board& board, int depth, PieceColor_e color){
     std::optional<MoveRequest_s> finalMove;// = std::nullopt;
     std::vector<MoveRequest_s> possibleMoves;
 
+    // std::cout << "Negamax: color = " << pieceColorToSymbol(color) << " depth = " << depth << std::endl;
+
     if(depth == 0){
         // At the extent of the search. 
         // Score this board
         auto scale = color == color_ ? 1 : -1;
+        // print_board(board);
         return score(board, color) * scale;
     }else{
         // Build a new board of possible moves for the other color
@@ -219,7 +258,7 @@ std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board){
             Board testBoard = board;
             move_piece(&testBoard, startLoc, testLoc);
 
-            auto score = negamax(board, max_search_depth, nextColor);
+            auto score = negamax(testBoard, 5, nextColor);
 
             // At this point we have the best score from going down this branch
             auto& move = possibleMoves.emplace_back();
@@ -245,7 +284,7 @@ std::optional<MoveRequest_s> CpuPlayer::search_for_move(const Board& board){
 }
 
 std::optional<MoveRequest_s> CpuPlayer::pick_move(const Board& board){
-    max_search_depth = 2;
+    max_search_depth = 3;
 
     return search_for_move(board);
 }
