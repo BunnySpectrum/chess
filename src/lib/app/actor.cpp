@@ -41,26 +41,6 @@ ReturnCode_e move_piece(Board* board, Location startLoc, Location endLoc){
     return RC_SUCCESS;
 }
 
-// bool is_valid_move(Board board, Location startLoc, Location endLoc){
-//     auto startPiece = board.get_piece(startLoc);
-//     auto endPiece = board.get_piece(endLoc);
-
-//     if(startLoc.is_invalid() || endLoc.is_invalid()){
-//         return false;
-//     }
-
-//     // Rule 0: can't capture your own piece
-//     if((endPiece.id() != PIECE_NOTHING) && (startPiece.color() == endPiece.color()) ){
-//         std::cout << "Can't capture own piece" << std::endl;
-//         return false;
-//     }
-
-//     int deltaRow = abs(startLoc.row() - endLoc.row());
-//     int deltaCol = abs(startLoc.col() - endLoc.col());
-//     bool isDiagonal = deltaRow == deltaCol;
-
-//     return false;
-// }
 
 std::vector<Location> valid_moves_for_piece(const Board& board, Location loc){
     if(loc.is_invalid()){
@@ -199,19 +179,20 @@ std::vector<Location> valid_moves_for_pawn(const Board* pBoard, Location startLo
         testPiece = pBoard->get_piece(testLoc);
         if( (testPiece.id() == PIECE_NOTHING) ){
             result.push_back(testLoc);
-        }
-    }
 
-    // two steps if first
-    if(startPiece.id() == PIECE_PAWN_FIRST){
-        testLoc = Location(startLoc.row() + 2*direction, startLoc.col());
-        if(!testLoc.is_invalid()){
-            testPiece = pBoard->get_piece(testLoc);
-            if( (testPiece.id() == PIECE_NOTHING) ){
-                result.push_back(testLoc);
+            // two steps if first
+            if(startPiece.id() == PIECE_PAWN_FIRST){
+                testLoc = Location(startLoc.row() + 2*direction, startLoc.col());
+                if(!testLoc.is_invalid()){
+                    testPiece = pBoard->get_piece(testLoc);
+                    if( (testPiece.id() == PIECE_NOTHING) ){
+                        result.push_back(testLoc);
+                    }
+                }
             }
         }
     }
+
 
     return result;
 }
